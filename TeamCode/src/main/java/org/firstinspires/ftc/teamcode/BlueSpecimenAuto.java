@@ -103,7 +103,7 @@ public class BlueSpecimenAuto extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        limelight.initLimelight();
+        limelight.initLimelight(hardwareMap, telemetry);
 
         buildPaths();
     }
