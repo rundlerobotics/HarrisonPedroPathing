@@ -1,15 +1,19 @@
-package org.firstinspires.ftc.teamcode.pedroPathing;
+package org.firstinspires.ftc.teamcode;
 
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.util.Timer;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+
+@Autonomous
 public class BlueSpecimenAuto extends OpMode {
     private Follower follower;
     private Timer pathTimer;
@@ -22,6 +26,10 @@ public class BlueSpecimenAuto extends OpMode {
 
     // im not gonna make the whole auto when the new game is in 3 days
     private PathChain scorePreload, gotoBrick1;
+
+    private LimeLight limelight = new LimeLight();
+    private LLResult currentResult;
+
     public void buildPaths() {
         scorePreload = follower.pathBuilder() // straight line example
                 .addPath(new BezierLine(startPose, scorePose1))
@@ -75,6 +83,8 @@ public class BlueSpecimenAuto extends OpMode {
     public void loop() {
         follower.update();
 
+        currentResult = limelight.updatelimeLight();
+
         autonomousPathUpdate();
 
         // Feedback to Driver Hub
@@ -82,6 +92,7 @@ public class BlueSpecimenAuto extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("completion value", follower.getCurrentTValue());
         telemetry.update();
     }
 
@@ -91,12 +102,16 @@ public class BlueSpecimenAuto extends OpMode {
         pathTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+
+        limelight.initLimelight();
+
         buildPaths();
     }
     /** This method is called once at the start of the OpMode. It runs all the setup actions, including building paths and starting the path system **/
     @Override
     public void start() {
         setPathState(0);
+        limelight.startLimelight();
     }
 
 
