@@ -18,6 +18,8 @@ public class BlueSpecimenAuto extends OpMode {
     private Follower follower;
     private Timer pathTimer;
 
+    // test
+
     private int pathState;
 
     private final Pose startPose = new Pose(8, 48, Math.toRadians(0));
